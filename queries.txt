@@ -1,0 +1,58 @@
+CREATE TABLE users (id int(10) PRIMARY KEY AUTO_INCREMENT, email varchar(50) UNIQUE, batch varchar(5) NOT NULL,mentor int(10), CONSTRAINT mentor FOREIGN KEY(mentor) 
+REFERENCES mentors(id));
+
+CREATE TABLE codekata (id int(10) PRIMARY KEY AUTO_INCREMENT, question varchar(200),solved boolean, user_id int(10), CONSTRAINT user_id FOREIGN KEY(user_id) REFERENCES users(id)); 
+
+CREATE TABLE attendance (id int(10) PRIMARY KEY AUTO_INCREMENT, class_date date,present boolean, user_id int(10), CONSTRAINT userId FOREIGN KEY(user_id) REFERENCES users(id)); 
+
+CREATE TABLE topics (id int(10) PRIMARY KEY AUTO_INCREMENT,title varchar(100),language varchar(50), mentor varchar(30)); 
+
+CREATE TABLE tasks (id int(10) PRIMARY KEY AUTO_INCREMENT, details varchar(100),submission_url varchar(100),completed boolean, user_id int(10), CONSTRAINT usert_Id 
+FOREIGN KEY(user_id) REFERENCES users(id)); 
+
+CREATE TABLE company_drives (id int(10) PRIMARY KEY AUTO_INCREMENT, name varchar(100) NOT NULL,position varchar(100),ctc varchar(10),attended boolean,user_id int(10), CONSTRAINT userco_id FOREIGN KEY(user_id) REFERENCES users(id));
+
+CREATE TABLE mentors (id int(10) PRIMARY KEY AUTO_INCREMENT,name varchar(30) UNIQUE, email varchar(50) NOT NULL, 
+subject varchar(100) NOT NULL,student int(10));
+
+CREATE TABLE students_activated_courses (id int(10) PRIMARY KEY AUTO_INCREMENT, course varchar(100),activated boolean, user_id int(10), 
+CONSTRAINT users_Id FOREIGN KEY(user_id) REFERENCES users(id)); 
+
+CREATE TABLE courses (id int(10) PRIMARY KEY AUTO_INCREMENT, name varchar(100), user_id int(10), CONSTRAINT usersc_Id FOREIGN KEY(user_id) REFERENCES users(id)); 
+
+INSERT INTO users (email,batch,mentor) VALUES ('demo1@example.com','261',1), ('demo2@example.com','261',0),('demo3@example.com','261',2),('demo4@example.com','261',1),
+('demo5@example.com','261',2);
+
+INSERT INTO codekata (question,solved,user_id) VALUES ('1',true,1),('2',true,1),('3',false,2),('4',true,3),('5',true,2),('6',false,3),('7',true,4),
+('5',true,5),('1',false,4);
+
+INSERT INTO attendance (class_date,present,user_id) VALUES (2021-01-02,true,1),(2021-01-02,true,2),(2021-01-02,true,3),(2021-01-02,true,4),(2021-01-02,false,5),
+(2021-01-03,true,1),(2021-01-03,true,2),(2021-01-03,false,3),(2021-01-03,false,4),(2021-01-03,true,5);
+
+
+INSERT INTO topics (title,language,mentor) VALUES ('React','JS','Mentor 1'),('Node','JS','Mentor 2'),('MySQL','SQL','Mentor 2'),('MongoDB','JS','Mentor 1'),
+('Data structures','JS','Mentor 3');
+
+INSERT INTO tasks (details,submission_url,completed,user_id) VALUES ('Full stack project','https://example.com',true,1),('Capstone project','',false,1),
+('Task 2','',false,2),('Full stack project','https://example.com/2',true,2),('Full stack project','https://example.com/3',true,3);
+
+INSERT INTO company_drives (name,position,ctc,attended,user_id) VALUES ('ABC','Developer','8L',true,1),('VDF','Developer','10L',true,1),('DFFD','Tester','6L',true,2),
+('IOLJ','Software engineer','12L',true,2),('DSFDF','Frontend developer','10L',false,2);
+
+INSERT INTO mentors (name,email,subject,student) VALUEs ('Mentor 1','mentor1@example.com','React',1),('Mentor 2','mentor2@example.com','Node',1),
+('Mentor 3','mentor3@example.com','React',2),('Mentor 4','mentor4@example.com','React',3),('Mentor 5','mentor5@example.com','Node',2);
+
+INSERT INTO students_activated_courses (course,activated,user_id) VALUES ('React',true,1),('React',true,2),('Node',true,1),('Node',false,2),('React',true,3);
+
+INSERT INTO courses (name,user_id) VALUES ('React',1),('Node',1),('React',2),('Node',2),('Node',3);
+
+SELECT count(solved) from codekata where solved=1 GROUP BY user_id;
+SELECT sum(solved) from codekata where solved=1;
+
+SELECT user_id,count(attended) FROM company_drives where attended=1 group by user_id;
+
+SELECT courses.user_id,count(students_activated_courses.course) FROM students_activated_courses,courses where activated=1 group by user_id;
+
+SELECT * from mentors;
+
+SELECT count(student) FROM `mentors` where student >0;
